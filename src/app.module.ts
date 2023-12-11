@@ -18,6 +18,7 @@ import { GreenhouseModule } from './greenhouse/greenhouse.module';
 import { GreenhouseService } from './greenhouse/greenhouse.service';
 import { ProductService } from './product/product.service';
 import { ProductModule } from './product/product.module';
+import { AiModule } from './ai/ai.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { ProductModule } from './product/product.module';
     RobotModule,
     GreenhouseModule,
     ProductModule,
+    AiModule,
   ],
   controllers: [AppController, MqttController, GreenhouseController],
   providers: [AppService, MqttService, IsUniqueEmailConstraints],

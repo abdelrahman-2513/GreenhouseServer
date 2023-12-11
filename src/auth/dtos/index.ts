@@ -1,1 +1,1 @@
-export * from './Login.dto';
+export { LoginDto } from './Login.dto';
