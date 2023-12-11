@@ -13,7 +13,7 @@ import { Request, Response } from 'express';
 import { UserService } from './user.service';
 import { updateUserDTO } from './dtos/updateUser.dto';
 import { createUserDTO } from './dtos/createUser.dto';
-import { Roles } from 'auth/decorators';
+import { Public, Roles } from 'auth/decorators';
 import { EUserRoles } from 'auth/enum';
 @Controller('user')
 export class UserController {
@@ -62,7 +62,8 @@ export class UserController {
         );
     }
   }
-  @Roles(EUserRoles.ADMIN, EUserRoles.HOST)
+  // @Roles(EUserRoles.ADMIN, EUserRoles.HOST)
+  @Public()
   @Post('/')
   private async createUser(
     @Res() res: Response,
