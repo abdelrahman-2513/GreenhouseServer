@@ -2,7 +2,16 @@ import { Body, Controller, Post, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from './decorators';
 import { Response } from 'express';
-import { LogDTO } from 'auth/dtos/Login.dto';
+import { IsEmail, IsNotEmpty } from 'class-validator';
+
+export class LogDTO {
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @IsNotEmpty()
+  password: string;
+}
 
 @Controller('auth')
 export class AuthController {
