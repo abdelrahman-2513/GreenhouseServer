@@ -62,7 +62,7 @@ export class GreenhouseController {
         );
     }
   }
-  @Roles(EUserRoles.ADMIN)
+  @Roles(EUserRoles.HOST)
   @Post('/')
   private async createhouse(
     @Res() res: Response,

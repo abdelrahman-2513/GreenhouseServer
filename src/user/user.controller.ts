@@ -62,8 +62,8 @@ export class UserController {
         );
     }
   }
-  // @Roles(EUserRoles.ADMIN, EUserRoles.HOST)
-  @Public()
+  @Roles(EUserRoles.ADMIN, EUserRoles.HOST)
+  // @Public()
   @Post('/')
   private async createUser(
     @Res() res: Response,

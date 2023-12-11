@@ -62,7 +62,7 @@ export class RobotController {
         );
     }
   }
-  @Roles(EUserRoles.ADMIN)
+  @Roles(EUserRoles.HOST)
   @Post('/')
   private async createRobot(
     @Res() res: Response,

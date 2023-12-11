@@ -16,10 +16,10 @@ export class UserService {
     req: Request,
   ): Promise<UserDocument> {
     console.log('from create usr');
-    console.log(req['user'].id);
+    // console.log(req['user'].id);
 
     const newUser = new this.userModel(userData);
-    newUser.admin = req['user']['id'];
+    // newUser.admin = req['user']['id'];
     newUser.password = await this.hashPassword(userData.password);
     await newUser.save();
     return newUser;
