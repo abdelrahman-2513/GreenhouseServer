@@ -1,7 +1,7 @@
 import { IsString } from 'class-validator';
-import { EPhase, ERobotStatus } from 'src/auth/enum';
-import { IGreenhouse } from 'src/greenhouse/interfaces/greenhouse.interface';
-import { Greenhouse } from 'src/greenhouse/schemas/greenhouse.schema';
+import { EPhase, ERobotStatus } from 'auth/enum';
+import { IGreenhouse } from 'greenhouse/interfaces/greenhouse.interface';
+import { Greenhouse } from 'greenhouse/schemas/greenhouse.schema';
 
 export class CreateRobotDTO {
   @IsString()

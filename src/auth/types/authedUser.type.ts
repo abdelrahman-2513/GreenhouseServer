@@ -1,11 +1,11 @@
-import { IUser } from 'src/user/interfaces/user.interface.dto';
+import { IUser } from 'user/interfaces/user.interface.dto';
 import { EUserRoles } from '../enum';
 import { Types } from 'mongoose';
-import { User } from 'src/user/schemas/user.schema';
-import { IRobot } from 'src/robot/interfaces/robot.interface';
-import { IGreenhouse } from 'src/greenhouse/interfaces/greenhouse.interface';
-import { Robot } from 'src/robot/schemas/robot.schema';
-import { Greenhouse } from 'src/greenhouse/schemas/greenhouse.schema';
+import { User } from 'user/schemas/user.schema';
+import { IRobot } from 'robot/interfaces/robot.interface';
+import { IGreenhouse } from 'greenhouse/interfaces/greenhouse.interface';
+import { Robot } from 'robot/schemas/robot.schema';
+import { Greenhouse } from 'greenhouse/schemas/greenhouse.schema';
 
 export class LoggedUser implements IUser {
   _id?: Types.ObjectId;

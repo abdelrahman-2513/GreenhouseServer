@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
-import { EPhase, ERobotStatus } from 'src/auth/enum';
-import { Greenhouse } from 'src/greenhouse/schemas/greenhouse.schema';
+import { EPhase, ERobotStatus } from 'auth/enum';
+import { Greenhouse } from 'greenhouse/schemas/greenhouse.schema';
 
 export type RobotDocument = HydratedDocument<Robot>;
 

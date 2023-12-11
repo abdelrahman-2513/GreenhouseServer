@@ -1,7 +1,8 @@
 import { Body, Controller, Post, Req, Res } from '@nestjs/common';
+import { Public } from 'auth/decorators';
 import { Response } from 'express';
-import { Public } from 'src/auth/decorators';
-import { MqttService } from 'src/mqtt/mqtt.service';
+import { MqttService } from 'mqtt/mqtt.service';
+
 
 @Controller('ai')
 export class AiController {

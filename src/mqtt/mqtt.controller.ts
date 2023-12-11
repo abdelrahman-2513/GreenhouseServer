@@ -2,7 +2,7 @@
 
 import { Controller, Get, UseInterceptors } from '@nestjs/common';
 import { MqttService } from './mqtt.service';
-import { headerIncereptor } from 'src/incerptors/headers.increptors';
+import { headerIncereptor } from 'incerptors/headers.increptors';
 
 @Controller('mqtt')
 export class MqttController {

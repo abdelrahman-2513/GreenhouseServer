@@ -12,8 +12,8 @@ import { ProductService } from './product.service';
 import { Response } from 'express';
 import { UpdateProductDTO } from './dtos/updateProduct.dto';
 import { CreateProductDTO } from './dtos/createProduct.dto';
-import { Roles } from 'src/auth/decorators';
-import { EUserRoles } from 'src/auth/enum';
+import { Roles } from 'auth/decorators';
+import { EUserRoles } from 'auth/enum';
 @Controller('product')
 export class ProductController {
   constructor(private productSVC: ProductService) {}

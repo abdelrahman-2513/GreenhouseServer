@@ -1,5 +1,5 @@
 import { IsOptional } from 'class-validator';
-import { EProduct } from 'src/auth/enum';
+import { EProduct } from 'auth/enum';
 
 export class UpdateProductDTO {
   @IsOptional()

@@ -11,8 +11,8 @@ import {
 import { RobotService } from './robot.service';
 import { Response } from 'express';
 import { UpdateRobotDTO } from './dtos/updateRobot.dto';
-import { Roles } from 'src/auth/decorators';
-import { EUserRoles } from 'src/auth/enum';
+import { Roles } from 'auth/decorators';
+import { EUserRoles } from 'auth/enum';
 import { CreateRobotDTO } from './dtos/createRobot.dto';
 @Controller('robot')
 export class RobotController {

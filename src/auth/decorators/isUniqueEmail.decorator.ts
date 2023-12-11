@@ -1,5 +1,5 @@
 import { ValidationOptions, registerDecorator } from 'class-validator';
-import { IsUniqueEmailConstraints } from 'src/user/validators/isUniqueEmail.validator';
+import { IsUniqueEmailConstraints } from 'user/validators/isUniqueEmail.validator';
 
 export function IsUniqueEmail(validationOptions?: ValidationOptions) {
   return (object: object, propertyName: string) => {

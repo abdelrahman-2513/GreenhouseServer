@@ -1,5 +1,5 @@
 import { IsOptional, IsString } from 'class-validator';
-import { EPhase, ERobotStatus } from 'src/auth/enum';
+import { EPhase, ERobotStatus } from 'auth/enum';
 
 export class UpdateRobotDTO {
   @IsOptional()

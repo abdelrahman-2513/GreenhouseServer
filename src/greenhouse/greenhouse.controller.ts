@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import { GreenhouseService } from './greenhouse.service';
 import { Response } from 'express';
-import { EUserRoles } from 'src/auth/enum';
-import { Roles } from 'src/auth/decorators';
+import { EUserRoles } from 'auth/enum';
+import { Roles } from 'auth/decorators';
 import { UpdateGreenhouseDTO } from './dtos/updateGreenhouse.dto';
 import { CreateGreenhouseDTO } from './dtos/createGreenhouse.dto';
 @Controller('greenhouse')
