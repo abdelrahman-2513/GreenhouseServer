@@ -38,12 +38,9 @@ export class UserService {
   }
   // Read all users
   public async findAllUser(req: Request): Promise<UserDocument[]> {
-    let admin = '';
-    if (req['user'].role == 'admin') {
-      admin = req['user'].id;
-    }
+    const admin = req['user'].id;
     const users = await this.userModel
-      .find({ admin })
+      .find({ admin: req['user'].id })
       .populate([{ path: 'greenhouse' }, { path: 'robots' }])
       .exec();
     return users;
