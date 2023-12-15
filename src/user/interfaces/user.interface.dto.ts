@@ -14,6 +14,6 @@ export interface IUser {
   email?: string;
   admin?: User;
   createdAt?: Date;
-  robots?: Robot[];
-  greenhouses?: Greenhouse[];
+  robots?: Types.ObjectId[];
+  greenhouse?: Types.ObjectId[];
 }

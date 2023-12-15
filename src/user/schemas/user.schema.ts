@@ -21,9 +21,9 @@ export class User {
   @Prop({ type: Date, default: Date.now })
   createdAt: Date;
   @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: 'Robot' }])
-  robots: Robot[];
+  robots: Types.ObjectId[];
   @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: 'Greenhouse' }])
-  greenhouse: Greenhouse[];
+  greenhouse: Types.ObjectId[];
 }
 
 export const userSchema = SchemaFactory.createForClass(User);

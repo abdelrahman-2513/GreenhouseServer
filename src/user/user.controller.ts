@@ -63,6 +63,83 @@ export class UserController {
     }
   }
   @Roles(EUserRoles.ADMIN, EUserRoles.HOST)
+  @Patch('/:user_id/robot')
+  private async addRobot(
+    @Res() res: Response,
+    @Param('user_id') user_id: string,
+    @Body() updateUser: updateUserDTO,
+  ) {
+    try {
+      const updatedUser = await this.userSVC.addRobotAndUpdate(
+        user_id,
+        updateUser,
+      );
+      res.status(201).send(updatedUser);
+    } catch (err) {
+      console.log(err);
+      res
+        .status(400)
+        .send(
+          'Sorry try again later and check userId or email and name feilds!',
+        );
+    }
+  }
+  @Roles(EUserRoles.ADMIN, EUserRoles.HOST)
+  @Patch('/:user_id/robot/remove')
+  private async removeRobot(
+    @Res() res: Response,
+    @Param('user_id') user_id: string,
+    @Body() updateUser: updateUserDTO,
+  ) {
+    try {
+      const updatedUser = await this.userSVC.removeRobot(user_id, updateUser);
+      res.status(201).send(updatedUser);
+    } catch (err) {
+      console.log(err);
+      res.status(400).send(err.message);
+    }
+  }
+  @Roles(EUserRoles.ADMIN, EUserRoles.HOST)
+  @Patch('/:user_id/greenhouse')
+  private async addGreenhouse(
+    @Res() res: Response,
+    @Param('user_id') user_id: string,
+    @Body() updateUser: updateUserDTO,
+  ) {
+    try {
+      const updatedUser = await this.userSVC.addGreenhouseAndUpdate(
+        user_id,
+        updateUser,
+      );
+      res.status(201).send(updatedUser);
+    } catch (err) {
+      console.log(err);
+      res
+        .status(400)
+        .send(
+          'Sorry try again later and check userId or email and name feilds!',
+        );
+    }
+  }
+  @Roles(EUserRoles.ADMIN, EUserRoles.HOST)
+  @Patch('/:user_id/greenhouse/remove')
+  private async removeGreenhouse(
+    @Res() res: Response,
+    @Param('user_id') user_id: string,
+    @Body() updateUser: updateUserDTO,
+  ) {
+    try {
+      const updatedUser = await this.userSVC.removeGreenhouse(
+        user_id,
+        updateUser,
+      );
+      res.status(201).send(updatedUser);
+    } catch (err) {
+      console.log(err);
+      res.status(400).send(err.message);
+    }
+  }
+  @Roles(EUserRoles.ADMIN, EUserRoles.HOST)
   // @Public()
   @Post('/')
   private async createUser(

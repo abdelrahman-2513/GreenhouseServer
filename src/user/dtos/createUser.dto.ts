@@ -4,6 +4,7 @@ import { EUserRoles } from 'auth/enum';
 import { Robot } from 'robot/schemas/robot.schema';
 import { Greenhouse } from 'greenhouse/schemas/greenhouse.schema';
 import { User } from '../schemas/user.schema';
+import { Types } from 'mongoose';
 
 export class createUserDTO {
   @IsString()
@@ -17,6 +18,6 @@ export class createUserDTO {
 
   admin?: User;
   createdAt: Date;
-  robots: Robot[];
-  greenhouses: Greenhouse[];
+  robots: Types.ObjectId[];
+  greenhouse: Types.ObjectId[];
 }

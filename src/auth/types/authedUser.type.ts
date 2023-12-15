@@ -14,8 +14,8 @@ export class LoggedUser implements IUser {
   role?: EUserRoles;
   admin?: User;
   password?: string;
-  robots?: Robot[];
-  greenhouses?: Greenhouse[];
+  robots?: Types.ObjectId[];
+  greenhouse?: Types.ObjectId[];
   constructor(user: IUser) {
     this._id = user._id;
     this.email = user.email;
