@@ -6,12 +6,13 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Res,
 } from '@nestjs/common';
 import { RobotService } from './robot.service';
 import { Response } from 'express';
 import { UpdateRobotDTO } from './dtos/updateRobot.dto';
-import { Roles } from 'auth/decorators';
+import { Public, Roles } from 'auth/decorators';
 import { EUserRoles } from 'auth/enum';
 import { CreateRobotDTO } from './dtos/createRobot.dto';
 @Controller('robot')
@@ -87,6 +88,22 @@ export class RobotController {
     } catch (err) {
       console.log(err);
       res.status(400).send('Sorry try again later and check RobotId !');
+    }
+  }
+  @Public()
+  @Get('robot/getIdByName')
+  private async getId(@Query('name') name: string, @Res() res: Response) {
+    try {
+      const robot = await this.robotSVC.getRobotId(name);
+      if (robot) {
+        const id = this.robotSVC.gettingUniqueId(robot._id.toString());
+        res.status(200).send(id);
+      } else {
+        res.status(404).send('Sorry try again later and check Robot name !');
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(404).send('Sorry try again later and check Robot name !');
     }
   }
 }

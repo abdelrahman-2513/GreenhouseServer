@@ -5,14 +5,22 @@ import { RobotDocument } from './schemas/robot.schema';
 import { CreateRobotDTO } from './dtos/createRobot.dto';
 import { IRobot } from './interfaces/robot.interface';
 import { UpdateRobotDTO } from './dtos/updateRobot.dto';
+import { GreenhouseService } from 'greenhouse/greenhouse.service';
+import { isArrayBufferView } from 'util/types';
 
 @Injectable()
 export class RobotService {
-  constructor(@InjectModel('Robot') private robotModel: Model<RobotDocument>) {}
+  constructor(
+    @InjectModel('Robot') private robotModel: Model<RobotDocument>,
+    private greenhouseSVC: GreenhouseService,
+  ) {}
   // Create new robot Function
   public async createRobot(robotData: CreateRobotDTO): Promise<IRobot> {
     const newRobot = await this.robotModel.create(robotData);
-
+    await this.greenhouseSVC.addInStats(
+      robotData.greenhouse.toString(),
+      'robots',
+    );
     return newRobot;
   }
   //Read robot from DB
@@ -39,6 +47,30 @@ export class RobotService {
   }
   // Delete Robot
   public async deleteRobot(robot_id: string) {
+    const robot = await this.robotModel.findById(robot_id);
+    await this.greenhouseSVC.deleteInStats(
+      robot.greenhouse.toString(),
+      'robots',
+    );
     await this.robotModel.findByIdAndDelete(robot_id);
+  }
+
+  //get robot id by name for embedded
+  public async getRobotId(name: string) {
+    const robot = await this.robotModel.findOne({ name: name });
+    return robot;
+  }
+
+  public gettingUniqueId(id: string): string {
+    const substringLength = 6;
+    const startIndex = Math.max(
+      0,
+      Math.floor((id.length - substringLength) / 2),
+    );
+    const extractedSubstring = id.substring(
+      startIndex,
+      startIndex + substringLength,
+    );
+    return extractedSubstring;
   }
 }

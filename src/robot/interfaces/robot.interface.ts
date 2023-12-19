@@ -9,5 +9,5 @@ export interface IRobot {
   statistics?: object;
   currentPhase?: EPhase;
   status?: ERobotStatus;
-  greenhouse?: Greenhouse;
+  greenhouse?: Types.ObjectId;
 }

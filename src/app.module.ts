@@ -32,8 +32,8 @@ import { AiModule } from './ai/ai.module';
     ProductModule,
     AiModule,
   ],
-  controllers: [AppController, MqttController, GreenhouseController],
-  providers: [AppService, MqttService, IsUniqueEmailConstraints],
+  controllers: [AppController, GreenhouseController],
+  providers: [AppService, IsUniqueEmailConstraints],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

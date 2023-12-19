@@ -4,9 +4,13 @@ import { UserController } from './user.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { userSchema } from './schemas/user.schema';
 import { IsUniqueEmailConstraints } from './validators/isUniqueEmail.validator';
+import { GreenhouseModule } from 'greenhouse/greenhouse.module';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: 'User', schema: userSchema }])],
+  imports: [
+    MongooseModule.forFeature([{ name: 'User', schema: userSchema }]),
+    GreenhouseModule,
+  ],
   providers: [UserService, IsUniqueEmailConstraints],
   controllers: [UserController],
   exports: [UserService],

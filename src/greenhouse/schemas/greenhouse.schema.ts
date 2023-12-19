@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { IGStatistics } from 'greenhouse/interfaces/greenhouse.stat.interface';
 import { HydratedDocument } from 'mongoose';
 
 export type greenhouseDocument = HydratedDocument<Greenhouse>;
@@ -11,6 +12,9 @@ export class Greenhouse {
   location: object;
   @Prop()
   capacity: number;
+  @Prop({ type: Object })
+  statistics: IGStatistics
+
 }
 
 export const greenhouseSchema = SchemaFactory.createForClass(Greenhouse);

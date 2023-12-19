@@ -7,10 +7,14 @@ import { createUserDTO } from './dtos/createUser.dto';
 import * as bcrypt from 'bcrypt';
 import { updateUserDTO } from './dtos/updateUser.dto';
 import { Request } from 'express';
+import { GreenhouseService } from 'greenhouse/greenhouse.service';
 const { ObjectId } = mongoose.Types;
 @Injectable()
 export class UserService {
-  constructor(@InjectModel('User') private userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel('User') private userModel: Model<UserDocument>,
+    private greenHouseSVC: GreenhouseService,
+  ) {}
 
   // Create new user Function
   public async createUser(
@@ -24,6 +28,11 @@ export class UserService {
     newUser.admin = req['user']['id'];
     newUser.password = await this.hashPassword(userData.password);
     await newUser.save();
+    await this.greenHouseSVC.addInStats(
+      newUser.greenhouse[0].toString(),
+      'users',
+    );
+
     return newUser;
   }
   //Read user from DB
@@ -60,6 +69,8 @@ export class UserService {
   }
   // Delete user
   public async deleteUser(user_id: string) {
+    const user = await this.userModel.findById(user_id);
+    await this.greenHouseSVC.deleteInStats(user.greenhouse.toString(), 'users');
     await this.userModel.findByIdAndDelete(user_id);
   }
   // Passwod hashing function
@@ -86,6 +97,10 @@ export class UserService {
       userRobots.greenhouse &&
       !user.greenhouse.includes(userRobots.greenhouse[0])
     ) {
+      await this.greenHouseSVC.addInStats(
+        userRobots.greenhouse[0].toString(),
+        'users',
+      );
       user.greenhouse.push(...userRobots.greenhouse);
     }
     await user.populate({ path: 'greenhouse' });
@@ -139,7 +154,10 @@ export class UserService {
         });
         console.log(user.greenhouse);
         console.log(user.robots);
-
+        await this.greenHouseSVC.deleteInStats(
+          removeRobot.removeGreenhouse[0].toString(),
+          'users',
+        );
         return user.save();
       }
       throw new Error('Specified robot not found in user.robots');

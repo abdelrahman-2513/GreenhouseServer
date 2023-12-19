@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument, Types } from 'mongoose';
 import { EPhase, ERobotStatus } from 'auth/enum';
 import { Greenhouse } from 'greenhouse/schemas/greenhouse.schema';
 
@@ -16,7 +16,7 @@ export class Robot {
   @Prop()
   status: ERobotStatus;
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Greenhouse' })
-  greenhouse: Greenhouse;
+  greenhouse: Types.ObjectId;
 }
 
 export const robotSchema = SchemaFactory.createForClass(Robot);
