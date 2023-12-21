@@ -12,5 +12,6 @@ import { GreenhouseModule } from 'greenhouse/greenhouse.module';
   ],
   providers: [RobotService],
   controllers: [RobotController],
+  exports: [RobotService],
 })
 export class RobotModule {}
