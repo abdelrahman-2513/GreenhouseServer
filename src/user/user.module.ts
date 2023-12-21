@@ -11,7 +11,7 @@ import { GreenhouseModule } from 'greenhouse/greenhouse.module';
     MongooseModule.forFeature([{ name: 'User', schema: userSchema }]),
     GreenhouseModule,
   ],
-  providers: [UserService, IsUniqueEmailConstraints],
+  providers: [UserService],
   controllers: [UserController],
   exports: [UserService],
 })

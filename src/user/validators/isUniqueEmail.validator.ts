@@ -19,9 +19,11 @@ export class IsUniqueEmailConstraints implements ValidatorConstraintInterface {
     return 'This Email already exist or Invalid!';
   }
 
-  private isUnique(email: string): boolean {
+  private async isUnique(email: string): Promise<boolean> {
     console.log(email);
-    const user = this.userSVC.findUserByEmail(email);
+    console.log(this.userSVC);
+    const user = await this.userSVC.findUserByEmail(email);
+    console.log(user);
 
     return !user;
   }
