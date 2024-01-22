@@ -6,7 +6,6 @@ import { CreateRobotDTO } from './dtos/createRobot.dto';
 import { IRobot } from './interfaces/robot.interface';
 import { UpdateRobotDTO } from './dtos/updateRobot.dto';
 import { GreenhouseService } from 'greenhouse/greenhouse.service';
-import { isArrayBufferView } from 'util/types';
 
 @Injectable()
 export class RobotService {

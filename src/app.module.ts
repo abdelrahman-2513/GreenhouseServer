@@ -15,6 +15,7 @@ import { AiModule } from './ai/ai.module';
 import { IsUniqueEmailConstraints } from 'user/validators/isUniqueEmail.validator';
 import { IsUniqueNameConstraints } from 'robot/validators/isuniquerobotname.validator';
 // import { IsUniqueEmailConstraint } from 'user/validators/unique-emqil.validator';
+import { ProcessModule } from './process/process.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { IsUniqueNameConstraints } from 'robot/validators/isuniquerobotname.vali
     GreenhouseModule,
     ProductModule,
     AiModule,
+    ProcessModule,
   ],
   controllers: [AppController, GreenhouseController],
   providers: [AppService, IsUniqueEmailConstraints, IsUniqueNameConstraints],

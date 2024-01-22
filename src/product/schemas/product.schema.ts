@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument, Types } from 'mongoose';
 import { EProduct } from 'auth/enum';
-import { Greenhouse } from 'greenhouse/schemas/greenhouse.schema';
 
 export type ProductDocument = HydratedDocument<Product>;
 
@@ -14,8 +13,8 @@ export class Product {
   @Prop()
   quantity: number;
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Greenhouse' })
-  greenhouse: Greenhouse;
-  @Prop([{ type: Object }])
-  Phases: object[];
+  greenhouse: Types.ObjectId;
+  @Prop({ type: mongoose.Schema.Types.ObjectId ,ref: 'Process'})
+  Phases: Types.ObjectId;
 }
 export const productSchema = SchemaFactory.createForClass(Product);
