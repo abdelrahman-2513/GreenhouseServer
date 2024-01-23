@@ -1,4 +1,4 @@
-import { EPhase, EProduct } from 'auth/enum';
+import { EFeild, EPhase, EProduct, EStatus } from 'auth/enum';
 import { Types } from 'mongoose';
 
 export interface IProcess {
@@ -9,4 +9,6 @@ export interface IProcess {
   createdAt?: Date;
   type?: EProduct;
   currentPhase?: EPhase;
+  status?: EStatus;
+  feild: EFeild;
 }

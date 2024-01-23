@@ -1,4 +1,4 @@
-import { EPhase, EProduct } from 'auth/enum';
+import { EFeild, EPhase, EProduct, EStatus } from 'auth/enum';
 import { IsString } from 'class-validator';
 
 export class CreateProcessDTO {
@@ -10,4 +10,6 @@ export class CreateProcessDTO {
   robot: string;
   type: EProduct;
   currentPhase: EPhase;
+  status: EStatus;
+  feild: EFeild;
 }

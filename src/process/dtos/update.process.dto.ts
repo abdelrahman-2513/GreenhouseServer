@@ -1,15 +1,19 @@
-import { EPhase, EProduct } from 'auth/enum';
+import { EFeild, EPhase, EProduct, EStatus } from 'auth/enum';
 import { IsOptional } from 'class-validator';
 
 export class UpdateProcessDTO {
   @IsOptional()
-  creator: string;
+  creator?: string;
   @IsOptional()
-  greenhouse: string;
+  greenhouse?: string;
   @IsOptional()
-  robot: string;
+  robot?: string;
   @IsOptional()
-  type: EProduct;
+  type?: EProduct;
   @IsOptional()
-  currentPhase: EPhase;
+  currentPhase?: EPhase;
+  @IsOptional()
+  status?: EStatus;
+  @IsOptional()
+  feild?: EFeild;
 }

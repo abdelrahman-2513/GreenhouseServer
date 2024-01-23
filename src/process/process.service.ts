@@ -1,20 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { ProcessDocument } from './schemas/process.schema';
 import { CreateProcessDTO } from './dtos/create.process.dto';
 import { IProcess } from './interface/process.interface';
 import { UpdateProcessDTO } from './dtos/update.process.dto';
+import { QueueService } from 'queue/queue.service';
 
 @Injectable()
 export class ProcessService {
   constructor(
     @InjectModel('Process') private processModel: Model<ProcessDocument>,
+    @Inject(forwardRef(() => QueueService)) private QueueSVC: QueueService,
   ) {}
 
   // Create New Process
   public async createProcess(process: CreateProcessDTO): Promise<IProcess> {
     const newProcess = await this.processModel.create(process);
+    const queueProcess = {
+      id: newProcess._id,
+      feild: process.feild,
+      type: process.currentPhase,
+    };
+    await this.QueueSVC.addToQueue(queueProcess);
     return newProcess;
   }
   //Read process from DB

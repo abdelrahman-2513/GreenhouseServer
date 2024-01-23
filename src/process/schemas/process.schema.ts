@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { EPhase, EProduct } from 'auth/enum';
+import { EFeild, EPhase, EProduct, EStatus } from 'auth/enum';
 import mongoose, { HydratedDocument, Types } from 'mongoose';
 
 export type ProcessDocument = HydratedDocument<Process>;
@@ -18,6 +18,10 @@ export class Process {
   type: EProduct;
   @Prop()
   currentPhase: EPhase;
+  @Prop({ default: 'pending' })
+  status: EStatus;
+  @Prop()
+  feild: EFeild;
 }
 
 export const processSchema = SchemaFactory.createForClass(Process);
