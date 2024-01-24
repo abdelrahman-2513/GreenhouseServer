@@ -87,7 +87,7 @@ export class ProcessService {
     console.log(newgreenhouse_id);
     const proc = await this.processModel.find({ greenhouse: greenhouse_id });
     console.log(proc);
-    const greenhouseProcesses = await this.processModel
+    let greenhouseProcesses = await this.processModel
       .aggregate([
         {
           $match: {
@@ -113,6 +113,7 @@ export class ProcessService {
             processes: {
               $push: {
                 _id: '$_id',
+                status: '$status',
               },
             },
             userProcesses: { $sum: 1 },
@@ -143,6 +144,8 @@ export class ProcessService {
         },
       ])
       .exec();
+
+    if (greenhouseProcesses) greenhouseProcesses = greenhouseProcesses[0];
 
     return greenhouseProcesses;
   }

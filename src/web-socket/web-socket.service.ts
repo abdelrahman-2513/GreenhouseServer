@@ -47,12 +47,14 @@ export class WebSocketService
     this.mqttClient.on('message', (topic, message) => {
       try {
         const data = JSON.parse(message.toString());
-
+        console.log(data);
         // check if the topic is greenhouse!
         if (topic === `18ciqt4398/greenhouse`) {
+          console.log(data);
           this.server
             .to(`greenhouse-data-${data.greenhouseId}`)
             .emit('realtime-greenhouse-data', data);
+          console.log('sent to channel!');
         }
       } catch (error) {
         console.error('Error parsing MQTT message:', error);

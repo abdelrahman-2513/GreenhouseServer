@@ -19,6 +19,7 @@ import { ProcessModule } from './process/process.module';
 import { BullModule } from '@nestjs/bull';
 import { QueueService } from './queue/queue.service';
 import { QueueModule } from 'queue/queue.module';
+import { ProcessConsumer } from 'queue/consumers/queue.consumer';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { QueueModule } from 'queue/queue.module';
       useFactory: () => require('./auth/config/bull.config'),
     }),
     ConfigModule.forRoot({ envFilePath: '.env' }),
-    BullModule.registerQueue({ name: 'Navigation-queue' }),
+    // BullModule.registerQueue({ name: 'Navigation-queue' }),
     MongooseModule.forRoot(process.env.DATABASE_URL),
     WebSocketModule,
     UserModule,
@@ -43,7 +44,7 @@ import { QueueModule } from 'queue/queue.module';
     AppService,
     IsUniqueEmailConstraints,
     IsUniqueNameConstraints,
-    QueueService,
+    ProcessConsumer,
   ],
 })
 export class AppModule {
