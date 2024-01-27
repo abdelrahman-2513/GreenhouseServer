@@ -107,9 +107,14 @@ export class WebSocketService
     console.log(message);
     const extractedSubstring = this.gettingUniqueId(message.robotId);
     message.robotId = extractedSubstring;
-    this.mqttClient.publish(`18ciqt4398/robot`, JSON.stringify(message));
+    const MqttMessage = this.CreateDataFormat(message);
+    this.mqttClient.publish(`18ciqt4398/robot`, MqttMessage);
   }
 
+  private CreateDataFormat(message: IWRobot): string {
+    const MqttMessage = `@${message.robotId}$C${message.message}00;`;
+    return MqttMessage;
+  }
   private gettingUniqueId(id: string): string {
     const substringLength = 6;
     const startIndex = Math.max(
