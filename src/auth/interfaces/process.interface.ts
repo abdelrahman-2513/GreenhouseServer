@@ -5,4 +5,5 @@ export interface IGProcess {
   id?: Types.ObjectId;
   feild?: EFeild;
   type?: EPhase;
+  robot_id?: string;
 }

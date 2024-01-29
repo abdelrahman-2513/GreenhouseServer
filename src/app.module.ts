@@ -17,17 +17,19 @@ import { IsUniqueNameConstraints } from 'robot/validators/isuniquerobotname.vali
 // import { IsUniqueEmailConstraint } from 'user/validators/unique-emqil.validator';
 import { ProcessModule } from './process/process.module';
 import { BullModule } from '@nestjs/bull';
-import { QueueService } from './queue/queue.service';
 import { QueueModule } from 'queue/queue.module';
 import { ProcessConsumer } from 'queue/consumers/queue.consumer';
+import { MqttService } from 'mqtt/mqtt.service';
+import { MqttSendProcessor } from 'queue/consumers/mqtt.queue.consumer';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ envFilePath: '.env' }),
     BullModule.forRootAsync({
       useFactory: () => require('./auth/config/bull.config'),
     }),
-    ConfigModule.forRoot({ envFilePath: '.env' }),
-    // BullModule.registerQueue({ name: 'Navigation-queue' }),
+    QueueModule,
+
     MongooseModule.forRoot(process.env.DATABASE_URL),
     WebSocketModule,
     UserModule,
@@ -37,14 +39,15 @@ import { ProcessConsumer } from 'queue/consumers/queue.consumer';
     ProductModule,
     AiModule,
     ProcessModule,
-    QueueModule,
   ],
   controllers: [AppController, GreenhouseController],
   providers: [
     AppService,
     IsUniqueEmailConstraints,
     IsUniqueNameConstraints,
-    ProcessConsumer,
+    // MqttSendProcessor,
+    // ProcessConsumer,
+    MqttService,
   ],
 })
 export class AppModule {

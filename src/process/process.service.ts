@@ -21,6 +21,7 @@ export class ProcessService {
       id: newProcess._id,
       feild: process.feild,
       type: process.currentPhase,
+      robot_id: process.robot,
     };
     await this.QueueSVC.addToQueue(queueProcess);
     return newProcess;
