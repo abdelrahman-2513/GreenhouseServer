@@ -11,6 +11,7 @@ import { Inject, forwardRef } from '@nestjs/common';
 import { gettingUniqueId } from 'auth/config/get.unique.id';
 import { EPhase, EStatus } from 'auth/enum';
 import { Job, Queue } from 'bull';
+import { MqttService } from 'mqtt/mqtt.service';
 import { UpdateProcessDTO } from 'process/dtos/update.process.dto';
 import { ProcessService } from 'process/process.service';
 
@@ -20,6 +21,7 @@ export class ProcessConsumer {
     @InjectQueue('Mqtt-send-queue') private readonly mqttSendQueue: Queue,
     @Inject(forwardRef(() => ProcessService))
     private readonly processSVC: ProcessService,
+    private mqttService: MqttService,
   ) {}
 
   @Process()
@@ -44,11 +46,8 @@ export class ProcessConsumer {
     robot_id = gettingUniqueId(robot_id);
 
     const MqttArray = this.FormulateData(Route, process, robot_id);
-    for (const route of MqttArray) {
-      await this.mqttSendQueue.add(route, { delay: 1000 }); // Add to MQTT send queue with 1-second delay
-
-      console.log(route);
-    }
+    console.log('MqttArray:', MqttArray); // Log MqttArray contents for debugging
+    await this.sendToEmpedded(MqttArray);
     console.log('Added to MQTT send queue:', MqttArray);
   }
 
@@ -67,6 +66,18 @@ export class ProcessConsumer {
     return MqttArray;
   }
 
+  async sendToEmpedded(MqttArray: string[]): Promise<void> {
+    for (const route of MqttArray) {
+      console.log('Adding route to MQTT send queue:', route); // Log each route being added to the queue
+      await this.delay(500);
+      this.mqttService.publish('18ciqt4398/robot', route);
+    }
+  }
+  private delay(ms: number): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(resolve, 1000);
+    });
+  }
   ProcessFinished(): void {
     console.log('Process Finished');
   }

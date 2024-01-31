@@ -14,13 +14,10 @@ import { ProductModule } from './product/product.module';
 import { AiModule } from './ai/ai.module';
 import { IsUniqueEmailConstraints } from 'user/validators/isUniqueEmail.validator';
 import { IsUniqueNameConstraints } from 'robot/validators/isuniquerobotname.validator';
-// import { IsUniqueEmailConstraint } from 'user/validators/unique-emqil.validator';
 import { ProcessModule } from './process/process.module';
 import { BullModule } from '@nestjs/bull';
 import { QueueModule } from 'queue/queue.module';
-import { ProcessConsumer } from 'queue/consumers/queue.consumer';
 import { MqttService } from 'mqtt/mqtt.service';
-import { MqttSendProcessor } from 'queue/consumers/mqtt.queue.consumer';
 
 @Module({
   imports: [
@@ -45,10 +42,9 @@ import { MqttSendProcessor } from 'queue/consumers/mqtt.queue.consumer';
     AppService,
     IsUniqueEmailConstraints,
     IsUniqueNameConstraints,
-    // MqttSendProcessor,
-    // ProcessConsumer,
     MqttService,
   ],
+  exports: [BullModule],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

@@ -10,16 +10,33 @@ import { MqttSendProcessor } from './consumers/mqtt.queue.consumer';
   imports: [
     BullModule.registerQueue({
       name: 'Navigation-queue',
-
+      limiter: {
+        duration: 5000, // Adjust the duration as needed (e.g., 5000 milliseconds = 5 seconds)
+        max: 10, // Adjust the concurrency limit as needed
+        bounceBack: false,
+      },
       // Adjust concurrency as needed
     }),
+    // BullModule.registerQueue({
+    //   name: 'my-queue',
+    //   limiter: {
+    //     max: 10,
+    //     duration: 0,
+    //   },
+    // }),
     BullModule.registerQueue({
       name: 'Mqtt-send-queue',
+      limiter: {
+        duration: 500, // Adjust the duration as needed (e.g., 5000 milliseconds = 5 seconds)
+        max: 10, // Adjust the concurrency limit as needed
+        bounceBack: false,
+      },
+
       /* other configuration options if needed */
     }),
     forwardRef(() => ProcessModule),
   ],
   providers: [QueueService, ProcessConsumer, MqttService, MqttSendProcessor],
-  exports: [QueueService],
+  exports: [QueueService, BullModule],
 })
 export class QueueModule {}

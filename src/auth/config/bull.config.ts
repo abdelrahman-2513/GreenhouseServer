@@ -7,3 +7,10 @@ module.exports = {
     password: process.env.REDIS_PASSWORD,
   },
 };
+// export const   bullConfig = {
+//   redis: {
+//     host: 'generous-puma-34925.upstash.io',
+//     port: 34925,
+//     password: '6dcede1fe9794c49ac5db91e311d726f',
+//   },
+// };
