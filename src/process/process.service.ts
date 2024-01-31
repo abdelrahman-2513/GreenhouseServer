@@ -52,6 +52,10 @@ export class ProcessService {
   public async deleteprocess(process_id: string) {
     await this.processModel.findByIdAndDelete(process_id);
   }
+  // Delete process
+  public async deleteAllprocess() {
+    await this.processModel.deleteMany();
+  }
 
   //Find processes done by user
   public async findUserProcesses(user_id: string): Promise<IProcess[]> {

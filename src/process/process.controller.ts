@@ -80,6 +80,16 @@ export class ProcessController {
         );
     }
   }
+  @Delete('/')
+  private async deleteAllProcesses(@Res() res: Response) {
+    try {
+      const newhouse = await this.ProcessSVC.deleteAllprocess();
+      res.status(204).send('Deleted successfully!');
+    } catch (err) {
+      console.log(err);
+      res.status(400).send('Sorry try again later and check houseId !');
+    }
+  }
   // Delete Process
   @Delete('/:process_id')
   private async deletehouse(
