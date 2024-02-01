@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Res,
 } from '@nestjs/common';
 import { ProcessService } from './process.service';
@@ -124,23 +125,36 @@ export class ProcessController {
   private async getRobotProcesses(
     @Res() res: Response,
     @Param('robot_id') robot_id: string,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
   ) {
     try {
-      const process = await this.ProcessSVC.findRobotProcesses(robot_id);
-      res.status(200).send(process);
+      const processes = await this.ProcessSVC.findRobotProcesses(
+        robot_id,
+        page,
+        pageSize,
+      );
+      res.status(200).send(processes);
     } catch (err) {
       console.log(err);
-      res.status(400).send('Sorry try again later');
+      res.status(400).send('Sorry, try again later');
     }
   }
+
   // Get greenhouse Processes
   @Get('/greenhouse/:house_id')
   private async getHouseProcesses(
     @Res() res: Response,
     @Param('house_id') house_id: string,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
   ) {
     try {
-      const process = await this.ProcessSVC.findGreenhouseProcesses(house_id);
+      const process = await this.ProcessSVC.findGreenhouseProcesses(
+        house_id,
+        page,
+        pageSize,
+      );
       res.status(200).send(process);
     } catch (err) {
       console.log(err);

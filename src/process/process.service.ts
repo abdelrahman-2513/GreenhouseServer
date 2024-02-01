@@ -66,24 +66,35 @@ export class ProcessService {
   }
 
   // Find processes done by robot
-  public async findRobotProcesses(robot_id: string): Promise<IProcess[]> {
+  public async findRobotProcesses(
+    robot_id: string,
+    page: number = 1,
+    pageSize: number = 10,
+  ): Promise<IProcess[]> {
     const robotProcesses = await this.processModel
       .find({
         robot: robot_id,
       })
-      .populate('robot');
+      .populate('robot')
+      .skip((page - 1) * pageSize)
+      .limit(pageSize);
     return robotProcesses;
   }
+
   // Find processes for greenhouse
   public async findGreenhouseProcesses(
     greenhouse_id: string,
+    page: number = 1,
+    pageSize: number = 10,
   ): Promise<IProcess[]> {
     const greenhouseProcesses = await this.processModel
       .find({
         greenhouse: greenhouse_id,
       })
       .populate('robot')
-      .populate('creator');
+      .populate('creator')
+      .skip((page - 1) * pageSize)
+      .limit(pageSize);
     return greenhouseProcesses;
   }
   //  Find processes For Greenhouse with stats
@@ -150,7 +161,8 @@ export class ProcessService {
       ])
       .exec();
 
-    if (greenhouseProcesses) greenhouseProcesses = greenhouseProcesses[0];
+    if (greenhouseProcesses.length > 0)
+      greenhouseProcesses = greenhouseProcesses[0];
 
     return greenhouseProcesses;
   }
