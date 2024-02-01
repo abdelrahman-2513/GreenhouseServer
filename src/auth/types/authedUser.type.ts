@@ -23,6 +23,7 @@ export class LoggedUser implements IUser {
     this.role = user.role;
     this.password = user.password;
     this.admin = user.admin;
+    this.greenhouse = user.greenhouse;
   }
 }
 export class AuthedUser {
