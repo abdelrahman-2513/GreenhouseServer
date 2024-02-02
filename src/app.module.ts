@@ -18,6 +18,7 @@ import { ProcessModule } from './process/process.module';
 import { BullModule } from '@nestjs/bull';
 import { QueueModule } from 'queue/queue.module';
 import { MqttService } from 'mqtt/mqtt.service';
+import { IssueModule } from './issue/issue.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { MqttService } from 'mqtt/mqtt.service';
     ProductModule,
     AiModule,
     ProcessModule,
+    IssueModule,
   ],
   controllers: [AppController, GreenhouseController],
   providers: [

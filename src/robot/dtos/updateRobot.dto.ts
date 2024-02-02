@@ -3,11 +3,11 @@ import { EPhase, ERobotStatus } from 'auth/enum';
 
 export class UpdateRobotDTO {
   @IsOptional()
-  name: string;
+  name?: string;
   @IsOptional()
-  statistics: object;
+  statistics?: object;
   @IsOptional()
-  currentPhase: EPhase;
+  currentPhase?: EPhase;
   @IsOptional()
-  status: ERobotStatus;
+  status?: ERobotStatus;
 }

@@ -19,7 +19,7 @@ import { UpdateProcessDTO } from './dtos/update.process.dto';
 export class ProcessController {
   constructor(private ProcessSVC: ProcessService) {}
   // Create Process
-  @Public()
+
   @Post('/')
   private async createProcess(
     @Res() res: Response,
@@ -34,7 +34,7 @@ export class ProcessController {
     }
   }
   // Get all Process
-  @Public()
+
   @Get('')
   private async getAllProcess(@Res() res: Response) {
     try {
