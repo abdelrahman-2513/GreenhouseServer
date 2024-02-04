@@ -7,12 +7,15 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   Res,
 } from '@nestjs/common';
 import { IssueService } from './issue.service';
 import { CreateIssueDTO } from './dtos/create.issue.dto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { UpdateIssueDTO } from './dtos/update.issue.dto';
+import { Roles } from 'auth/decorators';
+import { EUserRoles } from 'auth/enum';
 
 @Controller('issue')
 export class IssueController {
@@ -122,6 +125,84 @@ export class IssueController {
         pageSize,
       );
       res.status(200).send(Issue);
+    } catch (err) {
+      console.log(err);
+      res.status(400).send('Sorry try again later');
+    }
+  }
+
+  // Assign technician to an Issue
+  @Roles(EUserRoles.TECHNICIAN)
+  @Post('/assign/:issue_id')
+  async AssignTechnicican(
+    @Param('issue_id') issue_id: string,
+    @Res() res: Response,
+    @Req() req: Request,
+    // @Param('tech_id') tech_id: string,
+  ) {
+    try {
+      const tech_id = req['user'].id;
+      console.log(tech_id);
+      const Issue = await this.issueSVC.AssignTechnician(issue_id, tech_id);
+      res.status(200).send(Issue);
+    } catch (err) {
+      console.log(err);
+      res.status(400).send('Sorry try again later');
+    }
+  }
+
+  // Find technician issues
+  @Post('technician/')
+  async FindAllTechIssues(@Res() res: Response, @Req() req: Request) {
+    try {
+      const tech_id = req['user'].id;
+      console.log(tech_id);
+
+      const techIssues = await this.issueSVC.FindTechIssues(tech_id);
+      res.status(200).send(techIssues);
+    } catch (err) {
+      console.log(err);
+      res.status(400).send('Sorry try again later');
+    }
+  }
+  // Solve technician issues
+  @Roles(EUserRoles.TECHNICIAN)
+  @Post('/solve/:issue_id')
+  async OutToSolveIssue(
+    @Param('issue_id') issue_id: string,
+    @Res() res: Response,
+  ) {
+    try {
+      const techIssues = await this.issueSVC.SolvingIssue(issue_id);
+      res.status(200).send(techIssues);
+    } catch (err) {
+      console.log(err);
+      res.status(400).send('Sorry try again later');
+    }
+  }
+  // Close technician issues
+  @Roles(EUserRoles.TECHNICIAN)
+  @Post('/close/:issue_id')
+  async CloseIssue(@Res() res: Response, @Param('issue_id') issue_id: string) {
+    try {
+      const techIssues = await this.issueSVC.CloseIssue(issue_id);
+      res.status(200).send(techIssues);
+    } catch (err) {
+      console.log(err);
+      res.status(400).send('Sorry try again later');
+    }
+  }
+
+  // Get house issue stats
+  @Get('/greenhouse/:house_id')
+  async GreenhouseIssuesStats(
+    @Res() res: Response,
+    @Param('house_id') house_id: string,
+  ) {
+    try {
+      const houseIssues =
+        await this.issueSVC.findResolvedAndUnresolvedIssues(house_id);
+      res.status(200).send(houseIssues);
     } catch (err) {
       console.log(err);
       res.status(400).send('Sorry try again later');

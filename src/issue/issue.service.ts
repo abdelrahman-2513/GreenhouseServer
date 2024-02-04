@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { IssueDocument } from './schemas/issue.schema';
 import { RobotService } from 'robot/robot.service';
 import { CreateIssueDTO } from './dtos/create.issue.dto';
@@ -96,7 +96,11 @@ export class IssueService {
     resolved: IIssue[];
     unresolved: IIssue[];
   }> {
-    const techIssues = await this.IssueModel.find({ technician: tech_id })
+    const newtech_id = new Types.ObjectId(tech_id);
+    console.log(newtech_id);
+    const techIssues = await this.IssueModel.find({
+      technician: newtech_id,
+    })
       .populate('robot')
       .populate('creator');
 
@@ -127,7 +131,9 @@ export class IssueService {
     const Issue = await this.IssueModel.findByIdAndUpdate(issue_id, {
       status: EIStatus.RESOLVED,
     });
-
+    await this.RobotSVC.updateRobot(String(Issue.robot), {
+      status: ERobotStatus.FREE,
+    });
     return Issue;
   }
 
@@ -136,6 +142,7 @@ export class IssueService {
     resolved: IIssue[];
     unresolved: IIssue[];
   }> {
+    const newtech_id = new Types.ObjectId(greenhouseId);
     const issues = await this.IssueModel.find({ greenhouse: greenhouseId })
       .populate('robot')
       .populate('creator');

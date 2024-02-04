@@ -1,6 +1,6 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
+import mongoose, { Model, Types } from 'mongoose';
 import { ProcessDocument } from './schemas/process.schema';
 import { CreateProcessDTO } from './dtos/create.process.dto';
 import { IProcess } from './interface/process.interface';
@@ -165,5 +165,38 @@ export class ProcessService {
       greenhouseProcesses = greenhouseProcesses[0];
 
     return greenhouseProcesses;
+  }
+
+  // get recent process for each field
+  async getRecentProcessesByField(house_id: string): Promise<IProcess[]> {
+    const newHouseID = new Types.ObjectId(house_id);
+    const recentProcessesByField = await this.processModel.aggregate([
+      {
+        $match: { greenhouse: newHouseID },
+      },
+      {
+        $sort: { createdAt: -1 }, // Sort by createdAt field in descending order
+      },
+      {
+        $group: {
+          _id: '$feild', // Group by field
+          latestProcess: { $first: '$$ROOT' }, // Get the first document (latest) in each group
+        },
+      },
+      {
+        $replaceRoot: { newRoot: '$latestProcess' }, // Replace the root with the latest process in each group
+      },
+      {
+        $project: {
+          _id: 0,
+          feild: 1,
+          currentPhase: 1,
+          status: 1,
+          createdAt: 1,
+        },
+      },
+    ]);
+
+    return recentProcessesByField;
   }
 }

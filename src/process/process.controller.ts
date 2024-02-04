@@ -175,4 +175,17 @@ export class ProcessController {
       res.status(400).send('Sorry try again later');
     }
   }
+  @Get('/recent/:house_id')
+  async getRecentProcesses(
+    @Res() res: Response,
+    @Param('house_id') house_id: string,
+  ) {
+    try {
+      const process = await this.ProcessSVC.getRecentProcessesByField(house_id);
+      res.status(200).send(process);
+    } catch (err) {
+      console.log(err);
+      res.status(400).send('Sorry try again later');
+    }
+  }
 }
