@@ -28,7 +28,8 @@ export class ProcessService {
   }
   //Read process from DB
   public async findprocess(process_id: string): Promise<IProcess> {
-    const process = await this.processModel.findById(process_id);
+    const newProcessId = new Types.ObjectId(process_id);
+    const process = await this.processModel.findById(newProcessId);
     return process;
   }
 
