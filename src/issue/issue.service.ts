@@ -7,6 +7,7 @@ import { CreateIssueDTO } from './dtos/create.issue.dto';
 import { IIssue } from './interface/issue.interface';
 import { UpdateIssueDTO } from './dtos/update.issue.dto';
 import { EIStatus, ERobotStatus } from 'auth/enum';
+import { Public } from 'auth/decorators';
 
 @Injectable()
 export class IssueService {
@@ -77,6 +78,19 @@ export class IssueService {
       .limit(pageSize);
     return userIssuees;
   }
+  //Find Issuees done by greenhouse
+  public async findGreenhouseIssuees(
+    greenhouseId: string,
+    page: number = 1,
+    pageSize: number = 10,
+  ): Promise<IIssue[]> {
+    const issues = await this.IssueModel.find({ greenhouse: greenhouseId })
+      .populate('robot')
+      .populate('creator')
+      .skip((page - 1) * pageSize)
+      .limit(pageSize);
+    return issues;
+  }
 
   // Assign tech to issue
   public async AssignTechnician(
@@ -92,6 +106,7 @@ export class IssueService {
   }
 
   // Tech Issues
+  @Public()
   public async FindTechIssues(tech_id: string): Promise<{
     resolved: IIssue[];
     unresolved: IIssue[];

@@ -130,6 +130,26 @@ export class IssueController {
       res.status(400).send('Sorry try again later');
     }
   }
+  // Get Greenhouse Issuees
+  @Get('/greenhouse/:house_id')
+  private async getGreenhouseIssuees(
+    @Res() res: Response,
+    @Param('house_id') house_id: string,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    try {
+      const Issue = await this.issueSVC.findGreenhouseIssuees(
+        house_id,
+        page,
+        pageSize,
+      );
+      res.status(200).send(Issue);
+    } catch (err) {
+      console.log(err);
+      res.status(400).send('Sorry try again later');
+    }
+  }
 
   // Assign technician to an Issue
   @Roles(EUserRoles.TECHNICIAN)
@@ -194,7 +214,7 @@ export class IssueController {
   }
 
   // Get house issue stats
-  @Get('/greenhouse/:house_id')
+  @Get('/stats/greenhouse/:house_id')
   async GreenhouseIssuesStats(
     @Res() res: Response,
     @Param('house_id') house_id: string,
