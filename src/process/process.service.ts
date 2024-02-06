@@ -62,7 +62,8 @@ export class ProcessService {
   public async findUserProcesses(user_id: string): Promise<IProcess[]> {
     const userProcesses = await this.processModel
       .find({ creator: user_id })
-      .populate('creator');
+      .populate('creator')
+      .populate('robot');
     return userProcesses;
   }
 
@@ -77,6 +78,8 @@ export class ProcessService {
         robot: robot_id,
       })
       .populate('robot')
+      .populate('creator')
+      .populate('greenhouse')
       .skip((page - 1) * pageSize)
       .limit(pageSize);
     return robotProcesses;
