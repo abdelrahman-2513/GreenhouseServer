@@ -153,14 +153,67 @@ export class IssueService {
   }
 
   //Issue Stats
-  public async findResolvedAndUnresolvedIssues(greenhouseId: string): Promise<{
-    resolved: IIssue[];
-    unresolved: IIssue[];
-  }> {
+  public async findResolvedAndUnresolvedIssues(greenhouseId: string) {
     const newtech_id = new Types.ObjectId(greenhouseId);
-    const issues = await this.IssueModel.find({ greenhouse: greenhouseId })
-      .populate('robot')
-      .populate('creator');
+    // const issues = await this.IssueModel.find({ greenhouse: greenhouseId })
+    //   .populate('robot')
+    //   .populate('creator');
+
+    const issues = await this.IssueModel.aggregate([
+      {
+        $match: {
+          greenhouse: newtech_id,
+        },
+      },
+      {
+        $lookup: {
+          from: 'users', // Replace with the actual name of the 'creators' collection
+          localField: 'technician', // Assuming '_id' is the field in 'processes' that matches 'creator' in 'creators'
+          foreignField: '_id',
+          as: 'user',
+        },
+      },
+      {
+        $unwind: '$user',
+      },
+
+      {
+        $group: {
+          _id: '$user._id',
+          creator: { $first: '$user' },
+          issues: {
+            $push: {
+              _id: '$_id',
+              status: '$status',
+            },
+          },
+          userIssues: { $sum: 1 },
+        },
+      },
+
+      {
+        $project: {
+          _id: 0,
+          creator: 1,
+          issues: 1,
+          userIssues: 1,
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          creators: { $push: '$$ROOT' },
+          totalIssues: { $sum: '$userIssues' },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          creators: 1,
+          totalIssues: 1,
+        },
+      },
+    ]).exec();
 
     const resolved: IIssue[] = [];
     const unresolved: IIssue[] = [];
@@ -173,6 +226,6 @@ export class IssueService {
       }
     });
 
-    return { resolved, unresolved };
+    return issues;
   }
 }
