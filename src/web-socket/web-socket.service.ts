@@ -56,6 +56,14 @@ export class WebSocketService
             .emit('realtime-greenhouse-data', data);
           console.log('sent to channel!');
         }
+        // check if topic is robot and want to send streaming data
+        if (topic === `18ciqt4398/robotWeb`) {
+          console.log(data);
+          this.server
+            .to(`robot-data-${data.robotId}`)
+            .emit('realtime-streaming-data', data.stream);
+          console.log('sent to channel!');
+        }
       } catch (error) {
         console.error('Error parsing MQTT message:', error);
         console.error('Message content:', message.toString());
@@ -100,6 +108,38 @@ export class WebSocketService
     // this.mqttClient.subscribe(`18ciqt4398/greenhouse/${greenhouseId}`);
     this.mqttClient.subscribe(`18ciqt4398/greenhouse`);
   }
+  @SubscribeMessage('subscribe-to-robot')
+  subscribeToRobotStreaming(
+    @MessageBody() message: string,
+    @ConnectedSocket() client: Socket, // Ensure the correct decorator is used
+  ): void {
+    if (!client) {
+      // Handle the case where the client is not defined.
+      console.error('Client is not defined.');
+      return;
+    }
+    try {
+      console.log(message);
+      const data: IWRobot = JSON.parse(message);
+
+      // joining channel with the 6 charchters from the id of the greenhouse
+      const extractedSubstring = this.gettingUniqueId(data.robotId);
+      const channel = `robot-data-${extractedSubstring}`;
+      client.join(channel);
+      console.log(`Client ${client.id} subscribed to ${channel}`);
+
+      // Subscribe to the corresponding MQTT topic
+      // this.mqttClient.subscribe(`18ciqt4398/greenhouse/${greenhouseId}`);
+      this.mqttClient.publish(
+        `18ciqt4398/robot`,
+        `@${extractedSubstring}0${data.message}00;`,
+      );
+      data.message === 'SSS' &&
+        this.mqttClient.subscribe(`18ciqt4398/robotWeb`);
+    } catch (err) {
+      console.log(err);
+    }
+  }
   @SubscribeMessage('Monitor-robot')
   subscribeToRobot(@MessageBody() message: IWRobot, client: any) {
     console.log(message);
@@ -112,7 +152,7 @@ export class WebSocketService
   }
 
   private CreateDataFormat(message: IWRobot): string {
-    const MqttMessage = `@${message.robotId}$C${message.message}00;`;
+    const MqttMessage = `@${message.robotId}0C${message.message}00;`;
     return MqttMessage;
   }
   private gettingUniqueId(id: string): string {
