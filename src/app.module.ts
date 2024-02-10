@@ -51,7 +51,7 @@ import { IssueModule } from './issue/issue.module';
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(cors({ origin: 'http://localhost:3000', credentials: true }))
+      .apply(cors({ origin: '*', credentials: true }))
       .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }
