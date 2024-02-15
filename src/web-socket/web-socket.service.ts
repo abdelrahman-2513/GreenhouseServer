@@ -61,7 +61,7 @@ export class WebSocketService
           console.log(data);
           this.server
             .to(`robot-data-${data.robotId}`)
-            .emit('realtime-streaming-data', data.stream);
+            .emit('realtime-streaming-data', data);
           console.log('sent to channel!');
         }
       } catch (error) {
