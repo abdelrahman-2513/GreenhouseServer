@@ -5,6 +5,7 @@ import { ProcessModule } from 'process/process.module';
 import { ProcessConsumer } from './consumers/queue.consumer';
 import { MqttService } from 'mqtt/mqtt.service';
 import { MqttSendProcessor } from './consumers/mqtt.queue.consumer';
+import { RobotModule } from 'robot/robot.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { MqttSendProcessor } from './consumers/mqtt.queue.consumer';
       /* other configuration options if needed */
     }),
     forwardRef(() => ProcessModule),
+    RobotModule,
   ],
   providers: [QueueService, ProcessConsumer, MqttService, MqttSendProcessor],
   exports: [QueueService, BullModule],

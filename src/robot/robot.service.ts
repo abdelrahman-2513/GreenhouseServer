@@ -6,6 +6,7 @@ import { CreateRobotDTO } from './dtos/createRobot.dto';
 import { IRobot } from './interfaces/robot.interface';
 import { UpdateRobotDTO } from './dtos/updateRobot.dto';
 import { GreenhouseService } from 'greenhouse/greenhouse.service';
+import { ERobotStatus } from 'auth/enum';
 
 @Injectable()
 export class RobotService {
@@ -52,6 +53,40 @@ export class RobotService {
       'robots',
     );
     await this.robotModel.findByIdAndDelete(robot_id);
+  }
+
+  //update robot after getting acknoledge from embedded
+
+  async updateRobotStatus(robotId: string): Promise<IRobot> {
+    try {
+      if (!robotId) throw new Error('No robotID!');
+      const regex = new RegExp(robotId);
+      // const robot = await this.robotModel.findOneAndUpdate(
+      //   { _id: { $regex: regex.toString() } },
+      //   { $set: { status: ERobotStatus.FREE } },
+      //   { returnNewDocument: true },
+      // );
+      const allRobots = await this.robotModel.find();
+      console.log(regex);
+      const robotsToUpdate = allRobots.filter(
+        (robot) => robot._id.toString().indexOf(robotId) !== -1,
+      );
+
+      // Update each found robot individually
+      const updatedRobots = [];
+      for (const robot of robotsToUpdate) {
+        const updatedRobot = await this.robotModel.findOneAndUpdate(
+          { _id: robot._id },
+          { $set: { status: ERobotStatus.FREE } },
+          { returnNewDocument: true },
+        );
+        updatedRobots.push(updatedRobot);
+      }
+
+      return updatedRobots[0];
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   //get robot id by name for embedded

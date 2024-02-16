@@ -6,6 +6,7 @@ import { CreateProcessDTO } from './dtos/create.process.dto';
 import { IProcess } from './interface/process.interface';
 import { UpdateProcessDTO } from './dtos/update.process.dto';
 import { QueueService } from 'queue/queue.service';
+import { EStatus } from 'auth/enum';
 
 @Injectable()
 export class ProcessService {
@@ -202,5 +203,38 @@ export class ProcessService {
     ]);
 
     return recentProcessesByField;
+  }
+  async updateProcessStatus(robot_id: string): Promise<IProcess> {
+    try {
+      if (!robot_id) throw new Error('No robotID!');
+      const regex = new RegExp(robot_id);
+      // const robot = await this.processModel.findOneAndUpdate(
+      //   { robot: { $regex: regex.toString() } },
+      //   { $set: { status: EStatus.COMPLETED } },
+      //   { returnNewDocument: true },
+      // );
+      // return robot;
+      console.log(regex);
+      const allRobots = await this.processModel.find();
+      console.log(regex);
+      const robotsToUpdate = allRobots.filter(
+        (robot) => robot.robot.toString().indexOf(robot_id) !== -1,
+      );
+
+      // Update each found robot individually
+      const updatedRobots = [];
+      for (const robot of robotsToUpdate) {
+        const updatedRobot = await this.processModel.findOneAndUpdate(
+          { robot: robot.robot },
+          { $set: { status: EStatus.COMPLETED } },
+          { returnNewDocument: true },
+        );
+        updatedRobots.push(updatedRobot);
+      }
+
+      return updatedRobots[0];
+    } catch (err) {
+      console.log(err);
+    }
   }
 }

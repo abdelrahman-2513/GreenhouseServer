@@ -9,11 +9,13 @@ import {
 } from '@nestjs/bull';
 import { Inject, forwardRef } from '@nestjs/common';
 import { gettingUniqueId } from 'auth/config/get.unique.id';
-import { EPhase, EStatus } from 'auth/enum';
+import { EPhase, ERobotStatus, EStatus } from 'auth/enum';
 import { Job, Queue } from 'bull';
 import { MqttService } from 'mqtt/mqtt.service';
 import { UpdateProcessDTO } from 'process/dtos/update.process.dto';
 import { ProcessService } from 'process/process.service';
+import { UpdateRobotDTO } from 'robot/dtos/updateRobot.dto';
+import { RobotService } from 'robot/robot.service';
 
 @Processor('Navigation-queue')
 export class ProcessConsumer {
@@ -22,6 +24,7 @@ export class ProcessConsumer {
     @Inject(forwardRef(() => ProcessService))
     private readonly processSVC: ProcessService,
     private mqttService: MqttService,
+    private readonly robotSVC: RobotService,
   ) {}
 
   @Process()
@@ -30,11 +33,21 @@ export class ProcessConsumer {
     const obj = { type: job.data.type, feild: job.data.feild };
     const robot_id = job.data.robot_id;
     const updatedData: UpdateProcessDTO = { status: EStatus['ON PROGRESS'] };
+    const updatedRobotData: UpdateRobotDTO = {
+      status: ERobotStatus['ON PROCESS'],
+      currentPhase: obj.type,
+    };
 
-    const updated = await this.processSVC.updateprocess(
+    const updatedProcess = await this.processSVC.updateprocess(
       job.data.id,
       updatedData,
     );
+    console.log(robot_id, updatedRobotData);
+    const updatedRobot = await this.robotSVC.updateRobot(
+      robot_id,
+      updatedRobotData,
+    );
+    console.log(updatedRobot);
     console.log(`Processing job with data: ${JSON.stringify(obj)}`);
 
     const Routes = ['00F5', '20FR', '25FF', '26BB'];

@@ -132,9 +132,9 @@ export class WebSocketService
       // this.mqttClient.subscribe(`18ciqt4398/greenhouse/${greenhouseId}`);
       this.mqttClient.publish(
         `18ciqt4398/robot`,
-        `@${extractedSubstring}0${data.message}00;`,
+        `@${extractedSubstring}0A${data.message}00;`,
       );
-      data.message === 'SSS' &&
+      data.message === 'STST' &&
         this.mqttClient.subscribe(`18ciqt4398/robotWeb`);
     } catch (err) {
       console.log(err);

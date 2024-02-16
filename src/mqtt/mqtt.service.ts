@@ -1,14 +1,21 @@
 // mqtt.service.ts
 
 import { Injectable } from '@nestjs/common';
+import { EEmpType } from 'auth/enum';
+import { IEmpMessage } from 'auth/interfaces';
 import * as mqtt from 'mqtt';
+import { ProcessService } from 'process/process.service';
+import { RobotService } from 'robot/robot.service';
 
 @Injectable()
 export class MqttService {
   private client;
 
   // Connect to MQTT broker
-  constructor() {
+  constructor(
+    private readonly robotSVC: RobotService,
+    private readonly processSVC: ProcessService,
+  ) {
     // Connect to MQTT broker
     this.client = mqtt.connect('mqtt://b37.mqtt.one:1883', {
       username: '18ciqt4398',
@@ -22,6 +29,16 @@ export class MqttService {
     this.client.on('error', (err) => {
       console.error('MQTT error:', err);
     });
+    // this.client.on('message', (topic, message) => {
+    //   console.log(message);
+    //   // callback(message.toString());
+    //   if (topic === '18ciqt4398/robotAi') {
+    //     const data: IEmpMessage = JSON.parse(message.toString());
+    //     console.log(data);
+    //   } else {
+    //     console.log(message);
+    //   }
+    // });
   }
 
   // Publish a message to a topic
@@ -30,10 +47,26 @@ export class MqttService {
   }
 
   // Subscribe to a topic
-  subscribe(topic: string, callback: (message: number) => void) {
+  subscribe(topic: string) {
     this.client.subscribe(topic);
-    this.client.on('message', (topic, message) => {
-      callback(message.toString());
+    this.client.on('message', async (topic, message) => {
+      // console.log(message);
+      // callback(message.toString());
+      if (topic === '18ciqt4398/robotAi') {
+        const data: IEmpMessage = JSON.parse(message.toString());
+        if (data.type === EEmpType.Ack) {
+          console.log(data.robotId);
+          const process = await this.processSVC.updateProcessStatus(
+            data.robotId,
+          );
+          console.log(process);
+          const robot = await this.robotSVC.updateRobotStatus(data.robotId);
+          console.log(robot);
+        }
+        console.log(data);
+      } else {
+        console.log(message);
+      }
     });
   }
 }

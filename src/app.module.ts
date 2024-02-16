@@ -11,7 +11,6 @@ import { RobotModule } from './robot/robot.module';
 import { GreenhouseController } from './greenhouse/greenhouse.controller';
 import { GreenhouseModule } from './greenhouse/greenhouse.module';
 import { ProductModule } from './product/product.module';
-import { AiModule } from './ai/ai.module';
 import { IsUniqueEmailConstraints } from 'user/validators/isUniqueEmail.validator';
 import { IsUniqueNameConstraints } from 'robot/validators/isuniquerobotname.validator';
 import { ProcessModule } from './process/process.module';
@@ -19,6 +18,7 @@ import { BullModule } from '@nestjs/bull';
 import { QueueModule } from 'queue/queue.module';
 import { MqttService } from 'mqtt/mqtt.service';
 import { IssueModule } from './issue/issue.module';
+import { MqttModule } from './mqtt/mqtt.module';
 
 @Module({
   imports: [
@@ -35,9 +35,9 @@ import { IssueModule } from './issue/issue.module';
     RobotModule,
     GreenhouseModule,
     ProductModule,
-    AiModule,
     ProcessModule,
     IssueModule,
+    MqttModule,
   ],
   controllers: [AppController, GreenhouseController],
   providers: [
