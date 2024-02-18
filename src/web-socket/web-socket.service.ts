@@ -125,7 +125,7 @@ export class WebSocketService
       // joining channel with the 6 charchters from the id of the greenhouse
       const extractedSubstring = this.gettingUniqueId(data.robotId);
       const channel = `robot-data-${extractedSubstring}`;
-      client.join(channel);
+      data.message === 'STST' && client.join(channel);
       console.log(`Client ${client.id} subscribed to ${channel}`);
 
       // Subscribe to the corresponding MQTT topic
@@ -134,6 +134,7 @@ export class WebSocketService
         `18ciqt4398/robot`,
         `@${extractedSubstring}0A${data.message}00;`,
       );
+      console.log(`@${extractedSubstring}0A${data.message}00;`);
       data.message === 'STST' &&
         this.mqttClient.subscribe(`18ciqt4398/robotWeb`);
     } catch (err) {

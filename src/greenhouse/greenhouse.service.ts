@@ -6,6 +6,7 @@ import { CreateGreenhouseDTO } from './dtos/createGreenhouse.dto';
 import { IGreenhouse } from './interfaces/greenhouse.interface';
 import { UpdateGreenhouseDTO } from './dtos/updateGreenhouse.dto';
 import { IGStatistics } from './interfaces/greenhouse.stat.interface';
+import { IGreenhouseAI } from 'auth/interfaces';
 
 @Injectable()
 export class GreenhouseService {
@@ -24,8 +25,18 @@ export class GreenhouseService {
       successedProcesses: 0,
       robots: 0,
     };
+    console.log(houseData);
     houseData.statistics = newGreenhouseStatistics;
     const newGreenhouse = await this.greenHouseModel.create(houseData);
+    const AiGreenhouse: IGreenhouseAI = {
+      greenhouseId: newGreenhouse._id.toString(),
+      capacity: houseData.capacity,
+      areaLength: houseData.areaLength,
+      areaWidth: houseData.areaWidth,
+      fieldWidth: houseData.fieldWidth,
+      trackWidth: houseData.trackWidth,
+    };
+    console.log(AiGreenhouse);
     return newGreenhouse;
   }
   //Read greenhouse from DB

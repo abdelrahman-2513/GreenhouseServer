@@ -68,12 +68,14 @@ export class ProcessConsumer {
     console.log('Formulating routes');
     let MqttArray = [];
     let type = 'X';
-    process === EPhase.SEEDING || process === EPhase.FERTILIZING
-      ? (type = 'N')
-      : (type = 'H');
+    process === EPhase.SEEDING
+      ? (type = 'S')
+      : process === EPhase.FERTILIZING
+        ? (type = 'F')
+        : (type = 'H');
     Route.forEach((route, i) => {
-      const newRoute = `@${robot_id}${i}${type}${route}00;`;
-      MqttArray.unshift(newRoute);
+      const newRoute = `@${robot_id}${Route.length - i - 1}${type}${route}00;`;
+      MqttArray.push(newRoute);
     });
     console.log(MqttArray);
     return MqttArray;

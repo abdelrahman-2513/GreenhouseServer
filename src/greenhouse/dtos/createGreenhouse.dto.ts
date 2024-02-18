@@ -7,5 +7,13 @@ export class CreateGreenhouseDTO {
   location: object;
   @IsNumber()
   capacity: number;
+  @IsNumber()
+  trackWidth: number;
+  @IsNumber()
+  fieldWidth: number;
+  @IsNumber()
+  areaWidth: number;
+  @IsNumber()
+  areaLength: number;
   statistics: IGStatistics;
 }

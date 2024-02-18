@@ -7,6 +7,8 @@ import { IRobot } from './interfaces/robot.interface';
 import { UpdateRobotDTO } from './dtos/updateRobot.dto';
 import { GreenhouseService } from 'greenhouse/greenhouse.service';
 import { ERobotStatus } from 'auth/enum';
+import { IRobotAI } from 'auth/interfaces';
+import { AIRobot } from 'auth/types';
 
 @Injectable()
 export class RobotService {
@@ -17,6 +19,12 @@ export class RobotService {
   // Create new robot Function
   public async createRobot(robotData: CreateRobotDTO): Promise<IRobot> {
     const newRobot = await this.robotModel.create(robotData);
+    const robot: IRobotAI = {
+      robotId: newRobot._id.toString(),
+      greenhouseId: robotData.greenhouse.toString(),
+    };
+    const robotAi: AIRobot = new AIRobot(robot);
+    console.log(robotAi);
     await this.greenhouseSVC.addInStats(
       robotData.greenhouse.toString(),
       'robots',
