@@ -30,7 +30,11 @@ export class ProcessConsumer {
   @Process()
   async handleProcessCreation(job) {
     console.log('Start processing job:', job.data);
-    const obj = { type: job.data.type, feild: job.data.feild };
+    const obj = {
+      type: job.data.type,
+      feild: job.data.feild,
+      robotID: job.data.robot_id,
+    };
     const robot_id = job.data.robot_id;
     const updatedData: UpdateProcessDTO = { status: EStatus['ON PROGRESS'] };
     const updatedRobotData: UpdateRobotDTO = {
@@ -50,9 +54,41 @@ export class ProcessConsumer {
     console.log(updatedRobot);
     console.log(`Processing job with data: ${JSON.stringify(obj)}`);
 
-    const Routes = ['00F5', '20FR', '25FF', '26BB'];
-    await this.sendToMqtt(Routes, robot_id, obj.type);
-    console.log('All routes added to MQTT send queue');
+    // Ai create process url
+    const url = 'https://robot1-994bf13c204d.herokuapp.com/CreateProcess';
+
+    // Define options for the fetch request
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // Specify content type as JSON
+      },
+      body: JSON.stringify(obj), // Convert data to JSON string
+    };
+    let routes: string[];
+    // Make the POST request
+    fetch(url, options)
+      .then((response) => {
+        console.log(response);
+        if (response.ok) {
+          return response.json(); // Parse the JSON in the response
+        }
+        throw new Error('Network response was not ok.');
+      })
+      .then((data) => {
+        console.log(data); // Handle the response data
+        return data.path;
+      })
+      .then(async (paths) => {
+        console.log(paths);
+        routes = JSON.parse(paths.replace(/'/g, '"'));
+        console.log(routes);
+        await this.sendToMqtt(routes, robot_id, obj.type);
+        console.log('All routes added to MQTT send queue');
+      })
+      .catch((error) => {
+        console.error('There was a problem with your fetch operation:', error);
+      });
   }
 
   async sendToMqtt(Route: string[], robot_id: string, process: EPhase) {
