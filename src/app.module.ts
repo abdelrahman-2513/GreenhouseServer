@@ -19,6 +19,7 @@ import { QueueModule } from 'queue/queue.module';
 import { MqttService } from 'mqtt/mqtt.service';
 import { IssueModule } from './issue/issue.module';
 import { MqttModule } from './mqtt/mqtt.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { MqttModule } from './mqtt/mqtt.module';
     ProcessModule,
     IssueModule,
     MqttModule,
+    CloudinaryModule,
   ],
   controllers: [AppController, GreenhouseController],
   providers: [
