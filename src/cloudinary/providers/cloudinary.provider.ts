@@ -5,7 +5,7 @@ export const CloudinaryProvider = {
   provide: 'Cloudinary',
   useFactory: (config: ConfigService) => {
     return v2.config({
-      cloud_name: config.get('CLOUDINARY_CLOUD_NAME'),
+      cloud_name: 'dihkjyutg',
       api_key: config.get('CLOUDINARY_API_KEY'),
       api_secret: config.get('CLOUDINARY_API_SECRET'),
     });

@@ -1,4 +1,4 @@
-import { Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from './cloudinary.service';
@@ -8,8 +8,30 @@ export class CloudinaryController {
   constructor(private readonly cloudinaryService: CloudinaryService) {}
   @Post('upload/single')
   @UseInterceptors(FileInterceptor('file'))
-  public async uploadSingleFile(@UploadedFile() file: Express.Multer.File) {
-    const result = await this.cloudinaryService.uploadFile(file);
-    return result.secure_url;
+  public async uploadSingleFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() body: any, // Capture the entire request body
+  ) {
+    const { robots, files } = body; // Extract the robots parameter from the request body
+    console.log(file);
+
+    const res = await this.cloudinaryService.createUpdate(
+      robots.split(','),
+      file,
+    );
+    return res;
+  }
+
+  @Get('update/:id')
+  async getUpload(@Param('id') id: string) {
+    return await this.cloudinaryService.getUpdateById(id);
+  }
+  @Get('update/')
+  async getUploads() {
+    return await this.cloudinaryService.getAllUpdates();
+  }
+  @Get('update/robot/:id')
+  async getRobotUploads(@Param('id') id: string) {
+    return await this.cloudinaryService.getRobotUpdates(id);
   }
 }

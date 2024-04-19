@@ -69,11 +69,7 @@ export class RobotService {
     try {
       if (!robotId) throw new Error('No robotID!');
       const regex = new RegExp(robotId);
-      // const robot = await this.robotModel.findOneAndUpdate(
-      //   { _id: { $regex: regex.toString() } },
-      //   { $set: { status: ERobotStatus.FREE } },
-      //   { returnNewDocument: true },
-      // );
+
       const allRobots = await this.robotModel.find();
       console.log(regex);
       const robotsToUpdate = allRobots.filter(
