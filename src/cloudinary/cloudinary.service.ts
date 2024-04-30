@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Delete, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { UploadApiErrorResponse, UploadApiResponse, v2 } from 'cloudinary';
 import { Model, Types } from 'mongoose';
@@ -68,7 +68,8 @@ export class CloudinaryService {
       v2.uploader
         .upload_stream(
           {
-            resource_type: 'auto',
+            resource_type: 'auto', // Detect resource type automatically
+            format: 'pdf', // Force the file to be treated as a PDF
           },
           (error, result) => {
             if (error) return reject(error);
@@ -149,6 +150,42 @@ export class CloudinaryService {
   }
 
   /**
+   * This Function is used to delete update!
+   * @param updateId : the id of update to be deleted
+   * @returns string
+   */
+  async deleteUpdate(updateId: string): Promise<string> {
+    try {
+      // Retrieve the update from the database
+      const update: IUpdate = await this.updateModel.findById(updateId);
+      if (!update) throw new Error('No update found with this id!');
+
+      // Extract the Cloudinary secure URL from the update
+      const cloudinaryUrl = update.url;
+
+      // Delete the file from Cloudinary
+      if (cloudinaryUrl) {
+        // Extract the public ID from the Cloudinary URL
+        const publicId = cloudinaryUrl.substring(
+          cloudinaryUrl.lastIndexOf('/') + 1,
+          cloudinaryUrl.lastIndexOf('.'),
+        );
+
+        // Delete the file from Cloudinary using the public ID
+        await v2.uploader.destroy(publicId);
+      }
+
+      // Delete the update entry from the database
+      await this.updateModel.findByIdAndDelete(updateId);
+
+      return 'Deleted Successfully!';
+    } catch (err) {
+      console.log(err);
+      throw new Error('Failed to delete update.');
+    }
+  }
+
+  /**
    * This function is used to update robot
    * @param updateID :the update id
    * @param robotId : the robot Id
@@ -159,8 +196,13 @@ export class CloudinaryService {
       const newRobotID = new Types.ObjectId(robotId);
       const update: IUpdate = await this.updateModel.findById(updateID);
       if (!update) throw new Error('No update by this Id!');
-      if (update.robots.indexOf(newRobotID) === -1)
+
+      if (update.robots.map((elem) => elem.toString()).indexOf(robotId) === -1)
         throw new Error('The robot has no updates!');
+      if (update.url) {
+        const response = await fetch(update.url);
+        if (response.ok) console.log(await response.arrayBuffer());
+      }
       update.updated.push(newRobotID);
       return await this.updateModel.findByIdAndUpdate(updateID, {
         updated: update.updated,

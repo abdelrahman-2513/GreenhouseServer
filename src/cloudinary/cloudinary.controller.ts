@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from './cloudinary.service';
@@ -33,5 +41,17 @@ export class CloudinaryController {
   @Get('update/robot/:id')
   async getRobotUploads(@Param('id') id: string) {
     return await this.cloudinaryService.getRobotUpdates(id);
+  }
+  @Patch('/update/:updateId/robot/:robotId')
+  async updateRobot(
+    @Param('updateId') updateId: string,
+    @Param('robotId') robotId: string,
+  ) {
+    return await this.cloudinaryService.updateRobot(updateId, robotId);
+  }
+
+  @Delete('/update/:id')
+  async deleteUpdate(@Param('id') id: string) {
+    return await this.cloudinaryService.deleteUpdate(id);
   }
 }

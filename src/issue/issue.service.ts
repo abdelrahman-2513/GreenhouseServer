@@ -87,6 +87,7 @@ export class IssueService {
     const issues = await this.IssueModel.find({ greenhouse: greenhouseId })
       .populate('robot')
       .populate('creator')
+      .sort({ createdAt: -1 })
       .skip((page - 1) * pageSize)
       .limit(pageSize);
     return issues;
@@ -165,10 +166,11 @@ export class IssueService {
           greenhouse: newtech_id,
         },
       },
+
       {
         $lookup: {
-          from: 'users', // Replace with the actual name of the 'creators' collection
-          localField: 'technician', // Assuming '_id' is the field in 'processes' that matches 'creator' in 'creators'
+          from: 'users',
+          localField: 'technician',
           foreignField: '_id',
           as: 'user',
         },
