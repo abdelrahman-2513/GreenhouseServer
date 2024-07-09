@@ -15,18 +15,14 @@ import { CloudinaryService } from './cloudinary.service';
 export class CloudinaryController {
   constructor(private readonly cloudinaryService: CloudinaryService) {}
   @Post('upload/single')
-  @UseInterceptors(FileInterceptor('file'))
+  // @UseInterceptors(FileInterceptor('file'))
   public async uploadSingleFile(
-    @UploadedFile() file: Express.Multer.File,
+    // @UploadedFile() file: Express.Multer.File,
     @Body() body: any, // Capture the entire request body
   ) {
     const { robots, files } = body; // Extract the robots parameter from the request body
-    console.log(file);
 
-    const res = await this.cloudinaryService.createUpdate(
-      robots.split(','),
-      file,
-    );
+    const res = await this.cloudinaryService.createUpdate(robots.split(','));
     return res;
   }
 

@@ -32,16 +32,13 @@ export class CloudinaryService {
    * @param file :File The file to be uploaded
    * @returns uploaded update
    */
-  async createUpdate(
-    updateRobots: string[],
-    file: Express.Multer.File,
-  ): Promise<IUpdate> {
+  async createUpdate(updateRobots: string[]): Promise<IUpdate> {
     try {
       const updatedData: CreateUpdateDTO = { url: '', robots: [], updated: [] };
-      const result = await this.uploadFile(file);
-      const fileUrl: string = result.secure_url;
-      console.log(fileUrl);
-      updatedData.url = fileUrl;
+      // const result = await this.uploadFile(file);
+      // const fileUrl: string = result.secure_url;
+      // console.log(fileUrl);
+      updatedData.url = 'fileUrl';
 
       updatedData.robots = updateRobots.map(
         (robot) => new Types.ObjectId(robot),
@@ -61,23 +58,23 @@ export class CloudinaryService {
    * @param file :File The file to be uploaded to cloudinary
    * @returns the response of the uploaded file
    */
-  async uploadFile(
-    file: Express.Multer.File,
-  ): Promise<UploadApiResponse | UploadApiErrorResponse> {
-    return new Promise((resolve, reject) => {
-      v2.uploader
-        .upload_stream(
-          {
-            resource_type: 'auto', // Detect resource type automatically
-            format: 'pdf', // Force the file to be treated as a PDF
-          },
-          (error, result) => {
-            if (error) return reject(error);
-            resolve(result);
-          },
-        )
-        .end(file.buffer);
-    });
+  async uploadFile() // file: Express.Multer.File,
+  {
+    // return new Promise((resolve, reject) => {
+    //   v2.uploader
+    //     .upload_stream(
+    //       {
+    //         resource_type: 'auto', // Detect resource type automatically
+    //         format: 'pdf', // Force the file to be treated as a PDF
+    //       },
+    //       (error, result) => {
+    //         if (error) return reject(error);
+    //         resolve(result);
+    //       },
+    //     )
+    //     .end(file.buffer);
+    // });
+    console.log('hello!');
   }
   /**
    * This function is used to update the update data.
