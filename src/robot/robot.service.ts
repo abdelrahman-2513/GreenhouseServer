@@ -25,10 +25,34 @@ export class RobotService {
     };
     const robotAi: AIRobot = new AIRobot(robot);
     console.log(robotAi);
-    await this.greenhouseSVC.addInStats(
+    https: await this.greenhouseSVC.addInStats(
       robotData.greenhouse.toString(),
       'robots',
     );
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // Specify content type as JSON
+      },
+      body: JSON.stringify(robotAi), // Convert data to JSON string
+    };
+
+    // Make the POST request
+    fetch(
+      'https://create-robot-4aca26e5c03c.herokuapp.com/Create_robot',
+      options,
+    )
+      .then((response) => {
+        console.log(response);
+        if (response.ok) {
+          return response.json(); // Parse the JSON in the response
+        }
+        throw new Error('Network response was not ok.');
+      })
+      .then((data) => {
+        console.log(data); // Handle the response data
+        console.log(robotAi);
+      });
     return newRobot;
   }
   //Read robot from DB

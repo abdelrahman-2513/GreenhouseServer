@@ -36,7 +36,32 @@ export class GreenhouseService {
       fieldWidth: houseData.fieldWidth,
       trackWidth: houseData.trackWidth,
     };
-    console.log(AiGreenhouse);
+
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // Specify content type as JSON
+      },
+      body: JSON.stringify(AiGreenhouse), // Convert data to JSON string
+    };
+
+    // Make the POST request
+    fetch(
+      'https://insert-into-gh-b4b3f421bfcf.herokuapp.com/Insert_into_GH',
+      options,
+    )
+      .then((response) => {
+        console.log(response);
+        if (response.ok) {
+          return response.json(); // Parse the JSON in the response
+        }
+        throw new Error('Network response was not ok.');
+      })
+      .then((data) => {
+        console.log(data); // Handle the response data
+        console.log(AiGreenhouse);
+      });
+
     return newGreenhouse;
   }
   //Read greenhouse from DB

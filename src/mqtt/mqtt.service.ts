@@ -66,6 +66,30 @@ export class MqttService {
         console.log(data);
       } else {
         console.log(message);
+        const options = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Specify content type as JSON
+          },
+          body: JSON.stringify(message), // Convert data to JSON string
+        };
+
+        // Make the POST request
+        fetch(
+          'https://error-recovery-6054fc82277f.herokuapp.com/Error_recovery',
+          options,
+        )
+          .then((response) => {
+            console.log(response);
+            if (response.ok) {
+              return response.json(); // Parse the JSON in the response
+            }
+            throw new Error('Network response was not ok.');
+          })
+          .then((data) => {
+            console.log(data); // Handle the response data
+            this.publish('18ciqt4398/robot', `${data}`);
+          });
       }
     });
   }
